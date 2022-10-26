@@ -16,11 +16,10 @@
 # along with Simplex.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-import os
+import pkgutil
+import importlib
 
-__all__ = [m for m in os.listdir(os.path.dirname(__file__)) if m != "__init__.py"]
-__all__ = sorted([m[:-3] for m in __all__ if m.endswith(".py")])
-x = None
-for x in __all__:
-    __import__(x, locals(), globals())
-del os, x, m
+__all__ = []
+for _, name, _ in pkgutil.walk_packages(__path__, "{0}.".format(__name__)):
+    module = importlib.import_module(name)
+    __all__.append(name.rsplit(".", 1)[-1])
